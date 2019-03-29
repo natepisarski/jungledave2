@@ -6,13 +6,13 @@ const FreeObject = styled.div`
   position: absolute;
   left: ${props => props.x}px;
   top: ${props => props.y}px;
-  width: 16px;
-  height: 16px;
-  background-color: blue;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
+  background-color: ${props => props.color};
 `;
 
-const GameObject = ({ id, type, x, y, xVelocity, yVelocity }) => {
-  return <FreeObject {...{ x, y, xVelocity, yVelocity, id, type }} />;
+const GameObject = ({ id, type, x, y, width, height, color, xVelocity, yVelocity }) => {
+  return <FreeObject {...{ x, y, xVelocity, width, height, color, yVelocity, id, type }} />;
 };
 
 export const Game = ({gameObjects}) => {

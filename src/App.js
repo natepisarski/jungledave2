@@ -21,6 +21,9 @@ const gameObjectsPrototype = [
   {
     id: 0,
     type: "Canada",
+    width: 16,
+    height: 16,
+    color: 'blue',
     x: 0,
     y: 0,
     xVelocity: 0,
