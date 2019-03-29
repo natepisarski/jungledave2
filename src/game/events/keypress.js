@@ -3,7 +3,6 @@ import { map, merge } from "lodash";
 /** Return a function for a given keypress.
  *  The function will take a gameObject and modify it somehow, based on the key. */
 const getAppropriateHandler = key => {
-  console.debug('KEYPRESS', key);
   switch (key) {
     case "w":
       return gameObject => ({
@@ -44,7 +43,6 @@ export const handleKeyPress = (gameObjects, updateGameObjects) => key => {
     updateControlled(getAppropriateHandler(key))
   );
   updateGameObjects(updated);
-  console.debug("Updated game objects:");
-  console.debug(updated);
+
   return updated;
 };

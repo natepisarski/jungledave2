@@ -16,7 +16,6 @@ const GameObject = ({ id, type, x, y, width, height, color, xVelocity, yVelocity
 };
 
 export const Game = ({gameObjects}) => {
-  console.debug("RENDERED!");
   const renderGameObjects = object => <GameObject {...object} />;
 
   return (

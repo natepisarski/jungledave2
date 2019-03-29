@@ -4,9 +4,16 @@ const areColliding = (objectOne, objectTwo) => {
   This algorithm boils down to:
   Object one's midpoin
    */
-    const xCollision = Math.abs(objectOne.x - objectTwo.x) < Math.abs(((objectOne.width + objectTwo.width) / 2));
-    const yCollision = Math.abs(objectOne.y - objectTwo.y) < Math.abs(((objectOne.height + objectTwo.height) / 2));
-    return xCollision || yCollision;
+  if (objectOne == objectTwo) {
+    return false;
+  }
+  const xCollision =
+    Math.abs(objectOne.x - objectTwo.x) <
+    Math.abs((objectOne.width + objectTwo.width) / 2);
+  const yCollision =
+    Math.abs(objectOne.y - objectTwo.y) <
+    Math.abs((objectOne.height + objectTwo.height) / 2);
+  return xCollision && yCollision;
 };
 
 /**
@@ -16,12 +23,13 @@ const areColliding = (objectOne, objectTwo) => {
  * @param board
  * @param onCollision
  */
-export const checkCollisions = (checking, board, onCollision=(()=>{})) => {
-    for(const object of checking) {
-        for(const otherObject of board) {
-            if(areColliding(object, otherObject)) {
-                onCollision(object, otherObject);
-            }
-        }
+export const checkCollisions = (checking, board, onCollision = () => {}) => {
+  for (const object of checking) {
+    for (const otherObject of board) {
+      if (areColliding(object, otherObject)) {
+        onCollision(object, otherObject);
+        break;
+      }
     }
+  }
 };

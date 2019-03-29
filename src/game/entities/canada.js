@@ -1,3 +1,5 @@
+import {NUKE_TYPE} from "./nuke";
+
 export const CANADA_TYPE = "canada";
 export const CANADA_COLOR = "blue";
 export const [CANADA_WIDTH, CANADA_HEIGHT] = [16, 16];

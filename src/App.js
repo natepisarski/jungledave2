@@ -6,7 +6,11 @@ import { Game } from "./Game";
 import * as _ from "lodash";
 import { handleKeyPress } from "./game/events/keypress";
 import { canada } from "./game/entities/canada";
-import { nukeLoop } from "./game/events/nukeLoop";
+import {detectAll, keyHandler, nukeAll, perform, tickAll} from "./game/events/baseLoop";
+
+const setFocus = () => {
+  document.getElementById("top").focus();
+};
 
 const GameArea = styled.div`
   background-color: white;
@@ -21,51 +25,26 @@ const GameArea = styled.div`
 
 export const defaultGameObjects = [canada(0, 0)];
 
-const keyHandler = on => ({ key }: SyntheticInputEvent<>) => {
-  console.debug("Key handler responding to ", key);
-  return on(key);
-};
-
-const perform = (...functions) => gameObjects => {
-  let intermediateResult = gameObjects;
-  for (const func of functions) {
-    intermediateResult = func(intermediateResult);
-  }
-  return intermediateResult;
-};
-
-const tickAll = gameObjects => {
-  return _.map(gameObjects, gameObject => gameObject.tick(gameObject));
-};
-
-const nukeAll = gameObjects => {
-  return nukeLoop(gameObjects);
-};
-
 export const App = ({}) => {
   const [score, setScore] = useState(0);
   const [gameObjects, setGameObjects] = useState(defaultGameObjects);
   const getCurrentGameObjects = () => gameObjects;
 
- const performTick = perform(tickAll, nukeAll);
-
-  const setFocus = () => {
-    document.getElementById("top").focus();
-  };
+  const performTick = perform(tickAll, nukeAll, detectAll);
+  // const performTick = perform(tickAll, nukeAll);
 
   const initializeGameLoop = () => {
     const gameLoop = setInterval(() => {
       setGameObjects(oldGameObjects => {
         return performTick(oldGameObjects);
       });
-    }, 20);
+    }, 30);
   };
 
   useEffect(setFocus);
 
   useEffect(initializeGameLoop, []);
 
-  console.debug("GameObjects ", gameObjects);
   const gameKeyHandler = keyHandler(
     handleKeyPress(gameObjects, newObjects => setGameObjects(newObjects))
   );
