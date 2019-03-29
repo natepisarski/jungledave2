@@ -5,6 +5,8 @@ import "./App.css";
 import { Game } from "./Game";
 import * as _ from "lodash";
 import { handleKeyPress } from "./game/events/keypress";
+import { canada } from "./game/entities/canada";
+import { nukeLoop } from "./game/events/nukeLoop";
 
 const GameArea = styled.div`
   background-color: white;
@@ -17,35 +19,35 @@ const GameArea = styled.div`
   text-align: center;
 `;
 
-const gameObjectsPrototype = [
-  {
-    id: 0,
-    type: "Canada",
-    width: 16,
-    height: 16,
-    color: 'blue',
-    x: 0,
-    y: 0,
-    xVelocity: 0,
-    yVelocity: 0,
-    controlling: true,
-    tick: self => ({
-      ...self,
-      x: self.x + self.xVelocity,
-      y: self.y + self.yVelocity
-    })
-  }
-];
+export const defaultGameObjects = [canada(0, 0)];
 
 const keyHandler = on => ({ key }: SyntheticInputEvent<>) => {
-  console.debug('Key handler responding to ', key);
+  console.debug("Key handler responding to ", key);
   return on(key);
+};
+
+const perform = (...functions) => gameObjects => {
+  let intermediateResult = gameObjects;
+  for (const func of functions) {
+    intermediateResult = func(intermediateResult);
+  }
+  return intermediateResult;
+};
+
+const tickAll = gameObjects => {
+  return _.map(gameObjects, gameObject => gameObject.tick(gameObject));
+};
+
+const nukeAll = gameObjects => {
+  return nukeLoop(gameObjects);
 };
 
 export const App = ({}) => {
   const [score, setScore] = useState(0);
-  const [gameObjects, setGameObjects] = useState(gameObjectsPrototype);
+  const [gameObjects, setGameObjects] = useState(defaultGameObjects);
   const getCurrentGameObjects = () => gameObjects;
+
+ const performTick = perform(tickAll, nukeAll);
 
   const setFocus = () => {
     document.getElementById("top").focus();
@@ -53,9 +55,9 @@ export const App = ({}) => {
 
   const initializeGameLoop = () => {
     const gameLoop = setInterval(() => {
-      setGameObjects(oldGameObjects =>
-        _.map(oldGameObjects, gameObject => gameObject.tick(gameObject))
-      );
+      setGameObjects(oldGameObjects => {
+        return performTick(oldGameObjects);
+      });
     }, 20);
   };
 
@@ -64,7 +66,9 @@ export const App = ({}) => {
   useEffect(initializeGameLoop, []);
 
   console.debug("GameObjects ", gameObjects);
-  const gameKeyHandler = keyHandler(handleKeyPress(gameObjects, newObjects => setGameObjects(newObjects)));
+  const gameKeyHandler = keyHandler(
+    handleKeyPress(gameObjects, newObjects => setGameObjects(newObjects))
+  );
 
   return (
     <div
