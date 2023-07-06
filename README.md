@@ -15,13 +15,7 @@ As you progress through the game, you unlock progressively devastating "streaks"
 There is no winning, only Zuul. 
 
 # Tech Stack
-Jungle Dave is written in React. The ultimate goal is to have Jungle Dave to exhibit the most progressive tech stack possible.
-
-I assume that before this is all over, JD2 will use:
-
-* ReasonML / React (rendering)
-* Rust + WASM (collision detection)
-* AWS EKS (devops)
+Jungle Dave is written in React. It's not the most efficient way to render the game, but it's what I wanted to build it in so... 🤷‍♂️
 
 # License
 This project can be used under the terms of the MIT license, which goes as follows:
